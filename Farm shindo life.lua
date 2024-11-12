@@ -4,12 +4,12 @@ local function createGUI()
     local screenGui = Instance.new("ScreenGui")
     screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-    -- Frame principal para o menu de farm
+    -- Frame principal para o menu de farm (começa invisível)
     local mainFrame = Instance.new("Frame")
-    mainFrame.Size = UDim2.new(0, 300, 0, 150)
-    mainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
+    mainFrame.Size = UDim2.new(0, 300, 0, 200)
+    mainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
     mainFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    mainFrame.Visible = true
+    mainFrame.Visible = false
     mainFrame.Parent = screenGui
 
     -- Título "SL Farm"
@@ -21,21 +21,20 @@ local function createGUI()
     titleLabel.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
     titleLabel.Parent = mainFrame
 
-    -- Botão de minimizar
+    -- Botão de minimizar / abrir o menu
     local minimizeButton = Instance.new("TextButton")
-    minimizeButton.Size = UDim2.new(0, 30, 0, 30)
-    minimizeButton.Position = UDim2.new(1, -35, 0, 5)
+    minimizeButton.Size = UDim2.new(0, 50, 0, 50)
+    minimizeButton.Position = UDim2.new(0, 10, 0, 10) -- A posição inicial da bolinha
     minimizeButton.Text = "🥷🏻"
     minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    minimizeButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    minimizeButton.Parent = mainFrame
+    minimizeButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    minimizeButton.Parent = screenGui
 
-    -- Frame da lista de opções (oculta inicialmente)
+    -- Frame da lista de opções de farm
     local listFrame = Instance.new("Frame")
-    listFrame.Size = UDim2.new(1, 0, 0, 200)
-    listFrame.Position = UDim2.new(0, 0, 1, -40)
+    listFrame.Size = UDim2.new(1, 0, 1, -30)
+    listFrame.Position = UDim2.new(0, 0, 0, 30)
     listFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    listFrame.Visible = false
     listFrame.Parent = mainFrame
 
     -- ScrollFrame para as opções de farm
@@ -48,20 +47,11 @@ local function createGUI()
     -- Botão "Iniciar Auto-Farm"
     local startButton = Instance.new("TextButton")
     startButton.Size = UDim2.new(1, -20, 0, 40)
-    startButton.Position = UDim2.new(0, 10, 0, 70)
+    startButton.Position = UDim2.new(0, 10, 1, -50)
     startButton.Text = "Iniciar Auto-Farm"
     startButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     startButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
     startButton.Parent = mainFrame
-
-    -- Botão "Reduzir Gráficos"
-    local reduceGraphicsButton = Instance.new("TextButton")
-    reduceGraphicsButton.Size = UDim2.new(1, -20, 0, 40)
-    reduceGraphicsButton.Position = UDim2.new(0, 10, 1, -40)
-    reduceGraphicsButton.Text = "Reduzir Gráficos"
-    reduceGraphicsButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    reduceGraphicsButton.BackgroundColor3 = Color3.fromRGB(128, 128, 128)
-    reduceGraphicsButton.Parent = mainFrame
 
     -- Função para criar botões com bordas coloridas
     local function createFarmOption(name, emoji, color, borderColor, positionY)
@@ -84,23 +74,6 @@ local function createGUI()
     table.insert(farmOptions, createFarmOption("Pergaminho Verde", "📜", Color3.fromRGB(0, 255, 0), Color3.fromRGB(0, 255, 0), 100))
     table.insert(farmOptions, createFarmOption("Bosses", "💀", Color3.fromRGB(255, 165, 0), Color3.fromRGB(255, 140, 0), 150))
 
-    -- Função para reduzir os gráficos
-    local function reduceGraphics()
-        local lighting = game:GetService("Lighting")
-        lighting.GlobalShadows = false
-        lighting.FogEnd = 9e9
-        for _, v in pairs(game:GetService("Workspace"):GetDescendants()) do
-            if v:IsA("Part") or v:IsA("UnionOperation") or v:IsA("MeshPart") or v:IsA("WedgePart") then
-                v.Material = Enum.Material.SmoothPlastic
-                v.Reflectance = 0
-            elseif v:IsA("Decal") or v:IsA("Texture") then
-                v.Transparency = 1
-            end
-        end
-        settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-        print("Gráficos reduzidos para aumentar o desempenho")
-    end
-
     -- Função para iniciar o farm automático
     local function startFarming(selectedOptions)
         print("Iniciando Auto-Farm com as opções selecionadas:")
@@ -119,11 +92,6 @@ local function createGUI()
         end
     end
 
-    -- Configurar o clique do botão "Reduzir Gráficos"
-    reduceGraphicsButton.MouseButton1Click:Connect(function()
-        reduceGraphics()
-    end)
-
     -- Clique para iniciar o Auto-Farm
     startButton.MouseButton1Click:Connect(function()
         local selectedOptions = {}
@@ -139,12 +107,11 @@ local function createGUI()
         end
     end)
 
-    -- Função de alternância do menu
-    local isMinimized = false
+    -- Função de alternância do menu (Minimizar e expandir)
+    local isMinimized = true
     minimizeButton.MouseButton1Click:Connect(function()
         isMinimized = not isMinimized
         mainFrame.Visible = not isMinimized
-        minimizeButton.Position = isMinimized and UDim2.new(0.5, -15, 0.5, -15) or UDim2.new(1, -35, 0, 5)
     end)
 end
 
