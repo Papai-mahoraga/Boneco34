@@ -6,8 +6,8 @@ local function createGUI()
 
     -- Frame principal
     local mainFrame = Instance.new("Frame")
-    mainFrame.Size = UDim2.new(0, 300, 0, 400)
-    mainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
+    mainFrame.Size = UDim2.new(0, 300, 0, 500)
+    mainFrame.Position = UDim2.new(0.5, -150, 0.5, -250)
     mainFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     mainFrame.Parent = screenGui
 
@@ -21,7 +21,7 @@ local function createGUI()
 
     -- Scrollable Frame
     local scrollFrame = Instance.new("ScrollingFrame")
-    scrollFrame.Size = UDim2.new(1, 0, 1, -40)
+    scrollFrame.Size = UDim2.new(1, 0, 0, 350)
     scrollFrame.Position = UDim2.new(0, 0, 0, 40)
     scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 1000)
     scrollFrame.ScrollBarThickness = 12
@@ -47,8 +47,37 @@ local function createGUI()
     table.insert(farmOptions, createToggleButton("Pergaminho Verde", 80))
     table.insert(farmOptions, createToggleButton("Bosses", 120))
 
-    -- Retorna os botões criados
-    return farmOptions
+    -- Botão para Iniciar o Farm
+    local startButton = Instance.new("TextButton")
+    startButton.Size = UDim2.new(1, -20, 0, 40)
+    startButton.Position = UDim2.new(0, 10, 0, 380)
+    startButton.Text = "Iniciar Farm"
+    startButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    startButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+    startButton.Parent = mainFrame
+
+    -- Função que retorna as opções selecionadas
+    local selectedOptions = {}
+
+    -- Marcar/desmarcar as opções
+    for _, button in pairs(farmOptions) do
+        button.MouseButton1Click:Connect(function()
+            if button.BackgroundColor3 == Color3.fromRGB(100, 100, 100) then
+                button.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+                table.insert(selectedOptions, button.Text)
+            else
+                button.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+                for i = #selectedOptions, 1, -1 do
+                    if selectedOptions[i] == button.Text then
+                        table.remove(selectedOptions, i)
+                    end
+                end
+            end
+        end)
+    end
+
+    -- Retorna os botões e a lista de opções selecionadas
+    return startButton, selectedOptions
 end
 
 -- Função para pegar automaticamente os drops
@@ -71,32 +100,37 @@ local function autoPickUpDrops()
     end)
 end
 
--- Função para começar o farm
-local function startFarming(farmOptions)
+-- Função para começar o farm com as seleções
+local function startFarming(selectedOptions)
     -- Ativar auto-pickup
     autoPickUpDrops()
 
     -- Iniciar farm dependendo da seleção
-    for _, button in pairs(farmOptions) do
-        button.MouseButton1Click:Connect(function()
-            local selectedOption = button.Text
-            if selectedOption == "Estrela Azul" then
-                -- Código para farmar Estrela Azul
-                print("Fazendo farm de Estrela Azul...")
-            elseif selectedOption == "Estrela Vermelha" then
-                -- Código para farmar Estrela Vermelha
-                print("Fazendo farm de Estrela Vermelha...")
-            elseif selectedOption == "Pergaminho Verde" then
-                -- Código para farmar Pergaminho Verde
-                print("Fazendo farm de Pergaminho Verde...")
-            elseif selectedOption == "Bosses" then
-                -- Código para farmar Bosses
-                print("Fazendo farm de Bosses...")
-            end
-        end)
+    for _, option in ipairs(selectedOptions) do
+        if option == "Estrela Azul" then
+            -- Código para farmar Estrela Azul
+            print("Fazendo farm de Estrela Azul...")
+        elseif option == "Estrela Vermelha" then
+            -- Código para farmar Estrela Vermelha
+            print("Fazendo farm de Estrela Vermelha...")
+        elseif option == "Pergaminho Verde" then
+            -- Código para farmar Pergaminho Verde
+            print("Fazendo farm de Pergaminho Verde...")
+        elseif option == "Bosses" then
+            -- Código para farmar Bosses
+            print("Fazendo farm de Bosses...")
+        end
     end
 end
 
--- Criar a GUI e iniciar o farm
-local farmOptions = createGUI()
-startFarming(farmOptions)
+-- Criar a GUI e pegar o botão "Iniciar Farm"
+local startButton, selectedOptions = createGUI()
+
+-- Iniciar o farm quando o botão "Iniciar Farm" for clicado
+startButton.MouseButton1Click:Connect(function()
+    if #selectedOptions > 0 then
+        startFarming(selectedOptions)
+    else
+        print("Nenhuma opção selecionada!")
+    end
+end)
