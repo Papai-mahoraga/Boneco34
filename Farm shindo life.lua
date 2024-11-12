@@ -21,11 +21,11 @@ local function createGUI()
     titleLabel.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
     titleLabel.Parent = mainFrame
 
-    -- Botão de minimizar / abrir o menu
+    -- Botão de minimizar / abrir o menu (SL)
     local minimizeButton = Instance.new("TextButton")
     minimizeButton.Size = UDim2.new(0, 50, 0, 50)
-    minimizeButton.Position = UDim2.new(0, 10, 0, 10) -- A posição inicial da bolinha
-    minimizeButton.Text = "🥷🏻"
+    minimizeButton.Position = UDim2.new(0, 10, 0, 10)
+    minimizeButton.Text = "SL"
     minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     minimizeButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     minimizeButton.Parent = screenGui
@@ -81,13 +81,13 @@ local function createGUI()
             print(" - " .. option)
             -- Código específico para cada tipo de farm
             if option == "Estrela Azul" then
-                -- Código para farmar Estrela Azul
+                -- Código para aceitar e completar missões de Estrela Azul
             elseif option == "Estrela Vermelha" then
-                -- Código para farmar Estrela Vermelha
+                -- Código para aceitar e completar missões de Estrela Vermelha
             elseif option == "Pergaminho Verde" then
-                -- Código para farmar Pergaminho Verde
+                -- Código para aceitar e completar missões de Pergaminho Verde
             elseif option == "Bosses" then
-                -- Código para farmar Bosses
+                -- Código para aceitar e completar missões de Bosses
             end
         end
     end
